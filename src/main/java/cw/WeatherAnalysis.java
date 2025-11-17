@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,19 +96,48 @@ public class WeatherAnalysis {
                 return;
             }
 
+
+            // mm/dd/yyyy
             String[] dateParts = date.split("/" , -1);
             if (dateParts.length != 3 ) {
                 return;
             }
 
-            // parts[0] = day, parts[1] = month, parts[2] = year
-            String year = dateParts[2].trim();
-            String monthRaw = dateParts[1].trim();
+            String monthStr = dateParts[0].trim();
+            String dayStr   = dateParts[1].trim();
+            String yearStr  = dateParts[2].trim();
+
+            int monthInt, day, year;
+            try {
+                monthInt = Integer.parseInt(monthStr);
+                day   = Integer.parseInt(dayStr);
+                year  = Integer.parseInt(yearStr);
+            } catch (NumberFormatException e) {
+                return;
+            }
+
+            // build the record date
+            LocalDate recordDate;
+            try {
+                recordDate = LocalDate.of(year, monthInt, day);
+            } catch (Exception e) {
+                return; // invalid date
+            }
+
+            // compute - 10 years ago from today
+            LocalDate tenYearsAgo = LocalDate.now().minusYears(10);
+
+            // if this record is older than 10 years, skip it
+            if (recordDate.isBefore(tenYearsAgo)) {
+                return;
+            }
 
             // chamge month to 2 digits: "1" -> "01"
-            int monthInt = Integer.parseInt(monthRaw);
             String month = String.format("%02d", monthInt);
 
+
+
+            
             double precip = precipH.isEmpty() ? 0.0 : Double.parseDouble(precipH);
             double temp   = tempMean.isEmpty() ? 0.0 : Double.parseDouble(tempMean);
 
