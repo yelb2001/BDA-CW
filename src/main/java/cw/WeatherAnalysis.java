@@ -85,7 +85,7 @@ public class WeatherAnalysis {
             }
 
             String locationId = a[0].trim();
-            String date       = a[1].trim(); // DD/MM/YYYY
+            String date       = a[1].trim(); // MM/DD/YYYY
             String tempMean   = a[5].trim(); // temperature_2m_mean
             String precipH    = a[13].trim(); // precipitation_hours
 
@@ -96,13 +96,16 @@ public class WeatherAnalysis {
                 return;
             }
 
+            //
+            // formatting and adding date condition 
+            //
 
-            // mm/dd/yyyy
             String[] dateParts = date.split("/" , -1);
             if (dateParts.length != 3 ) {
                 return;
             }
 
+            // mm/dd/yyyy
             String monthStr = dateParts[0].trim();
             String dayStr   = dateParts[1].trim();
             String yearStr  = dateParts[2].trim();
@@ -117,27 +120,19 @@ public class WeatherAnalysis {
             }
 
             // build the record date
-            LocalDate recordDate;
-            try {
-                recordDate = LocalDate.of(year, monthInt, day);
-            } catch (Exception e) {
-                return; // invalid date
-            }
+            int currentYear = java.time.LocalDate.now().getYear();
+            int minYear = currentYear - 9; 
 
-            // compute - 10 years ago from today
-            LocalDate tenYearsAgo = LocalDate.now().minusYears(10);
-
-            // if this record is older than 10 years, skip it
-            if (recordDate.isBefore(tenYearsAgo)) {
+            if (year < minYear){
                 return;
             }
 
             // chamge month to 2 digits: "1" -> "01"
             String month = String.format("%02d", monthInt);
 
+            //String monthName = monthToName(month); 
 
 
-            
             double precip = precipH.isEmpty() ? 0.0 : Double.parseDouble(precipH);
             double temp   = tempMean.isEmpty() ? 0.0 : Double.parseDouble(tempMean);
 
