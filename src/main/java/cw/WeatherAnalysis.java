@@ -68,7 +68,7 @@ public class WeatherAnalysis {
         }
 
         @Override
-        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        protected void map(LongWritable key, Text value, Context context)throws IOException, InterruptedException {
 
             String line = value.toString();
             String lower = line.toLowerCase();
@@ -84,7 +84,7 @@ public class WeatherAnalysis {
             }
 
             String locationId = a[0].trim();
-            String date       = a[1].trim(); // "YYYY-MM-DD"
+            String date       = a[1].trim(); // DD/MM/YYYY
             String tempMean   = a[5].trim(); // temperature_2m_mean
             String precipH    = a[13].trim(); // precipitation_hours
 
@@ -95,13 +95,18 @@ public class WeatherAnalysis {
                 return;
             }
 
-            if (date.length() < 7) {
-                // invalid date
+            String[] dateParts = date.split("/" , -1);
+            if (dateParts.length != 3 ) {
                 return;
             }
 
-            String year  = date.substring(0, 4);
-            String month = date.substring(5, 7);
+            // parts[0] = day, parts[1] = month, parts[2] = year
+            String year = dateParts[2].trim();
+            String monthRaw = dateParts[1].trim();
+
+            // chamge month to 2 digits: "1" -> "01"
+            int monthInt = Integer.parseInt(monthRaw);
+            String month = String.format("%02d", monthInt);
 
             double precip = precipH.isEmpty() ? 0.0 : Double.parseDouble(precipH);
             double temp   = tempMean.isEmpty() ? 0.0 : Double.parseDouble(tempMean);
@@ -164,7 +169,7 @@ public class WeatherAnalysis {
         }
 
         Job job = Job.getInstance(conf, "Weather Monthly Map-Side Join");
-        job.setJarByClass(WeatherAnalysis.class);
+        job.setJarByClass(WeatherMapper.class);
 
         // 1) Add the small locations file to Distributed Cache
         job.addCacheFile(new Path(otherArgs[0]).toUri());
