@@ -18,6 +18,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import cw.WeatherAnalysis.WeatherMapper;
+
 
 
 public class WeatherAnalysis {
@@ -66,6 +68,8 @@ public class WeatherAnalysis {
             }
         }
 
+        
+
         @Override
         protected void map(LongWritable key, Text value, Context context)throws IOException, InterruptedException {
 
@@ -94,26 +98,15 @@ public class WeatherAnalysis {
                 return;
             }
 
-            //
             // formatting and adding date condition 
-            //
-
-            String[] dateParts = date.split("/" , -1);
-            if (dateParts.length != 3 ) {
+            int[] yearMonth = parseYearMonth(date);
+            if (yearMonth == null) {
+                // bad or unparseable date
                 return;
             }
 
-            // mm/dd/yyyy
-            String monthStr = dateParts[0].trim();
-            String yearStr  = dateParts[2].trim();
-
-            int monthInt, year;
-            try {
-                monthInt = Integer.parseInt(monthStr);
-                year  = Integer.parseInt(yearStr);
-            } catch (NumberFormatException e) {
-                return;
-            }
+            int year     = yearMonth[0];
+            int monthInt = yearMonth[1];
 
             // build the record date
             int currentYear = java.time.LocalDate.now().getYear();
@@ -142,6 +135,52 @@ public class WeatherAnalysis {
             outVal.set(outV);
             context.write(outKey, outVal);
         }
+
+        /**
+         * Parse a date that may be in MM/DD/YYYY or DD/MM/YYYY
+         * and return {year, month}. Returns null if invalid.
+         */
+        private int[] parseYearMonth(String rawDate) {
+            try {
+                String[] parts = rawDate.split("/", -1);
+                if (parts.length != 3) {
+                    return null;
+                }
+
+                int p1   = Integer.parseInt(parts[0].trim()); // may be month or day
+                int p2   = Integer.parseInt(parts[1].trim()); // may be month or day
+                int year = Integer.parseInt(parts[2].trim());
+
+                int day;
+                int month;
+
+                if (p1 > 12) {
+                    // 13–31 → must be DAY → treat as DD/MM/YYYY
+                    day = p1;
+                    month = p2;
+                } else if (p2 > 12) {
+                    // 13–31 → must be DAY → treat as MM/DD/YYYY
+                    month = p1;
+                    day = p2;
+                } else {
+                    // both <= 12 → ambiguous; choose a rule and stick to it
+                    // Here we assume DD/MM/YYYY (p1=day, p2=month)
+                    day = p1;
+                    month = p2;
+                }
+
+                if (month < 1 || month > 12) {
+                    return null;
+                }
+
+                // we don't *use* day for grouping, only year & month
+                return new int[]{year, month};
+
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
     }
 
     // ----------------- Reducer -----------------
