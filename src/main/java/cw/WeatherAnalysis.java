@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -107,13 +105,11 @@ public class WeatherAnalysis {
 
             // mm/dd/yyyy
             String monthStr = dateParts[0].trim();
-            String dayStr   = dateParts[1].trim();
             String yearStr  = dateParts[2].trim();
 
-            int monthInt, day, year;
+            int monthInt, year;
             try {
                 monthInt = Integer.parseInt(monthStr);
-                day   = Integer.parseInt(dayStr);
                 year  = Integer.parseInt(yearStr);
             } catch (NumberFormatException e) {
                 return;
