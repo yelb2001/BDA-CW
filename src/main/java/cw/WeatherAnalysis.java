@@ -18,9 +18,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-import cw.WeatherAnalysis.WeatherMapper;
-
-
 
 public class WeatherAnalysis {
 
@@ -120,8 +117,6 @@ public class WeatherAnalysis {
             String month = String.format("%02d", monthInt);
 
             //String monthName = monthToName(month); 
-
-
             double precip = precipH.isEmpty() ? 0.0 : Double.parseDouble(precipH);
             double temp   = tempMean.isEmpty() ? 0.0 : Double.parseDouble(tempMean);
 
@@ -151,21 +146,17 @@ public class WeatherAnalysis {
                 int p2   = Integer.parseInt(parts[1].trim()); // may be month or day
                 int year = Integer.parseInt(parts[2].trim());
 
-                int day;
                 int month;
 
                 if (p1 > 12) {
                     // 13–31 → must be DAY → treat as DD/MM/YYYY
-                    day = p1;
                     month = p2;
                 } else if (p2 > 12) {
                     // 13–31 → must be DAY → treat as MM/DD/YYYY
                     month = p1;
-                    day = p2;
                 } else {
                     // both <= 12 → ambiguous; choose a rule and stick to it
                     // Here we assume DD/MM/YYYY (p1=day, p2=month)
-                    day = p1;
                     month = p2;
                 }
 

@@ -6,7 +6,7 @@ services:
   # -----------------------------
   namenode:
     image: ramilu90/hive-namenode:1.0.0
-    container_name: hive-namenode
+    container_name: namenode
     restart: always
     env_file:
       - ./hadoop.env
@@ -32,7 +32,7 @@ services:
   # -----------------------------
   datanode:
     image: ramilu90/hive-datanode:1.0.0
-    container_name: hive-datanode
+    container_name: datanode
     restart: always
     env_file:
       - ./hadoop.env
