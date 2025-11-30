@@ -1,0 +1,65 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: radial-gradient(circle at top, #1f2937 0, #020617 55%, #000000 100%);
+  color: #e5e7eb;
+  padding: 0 24px 24px; 
+}
+
+
+header {
+  background: rgba(3, 27, 100, 0.95);
+  padding: 8px 24px 10px;
+  margin: 0 -24px 16px;          /* stretch to edges of the window */
+  border-radius: 0 0 24px 24px;  /* only bottom corners rounded */
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.9);
+}
+
+header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1px;
+  line-height: 1.2;
+}
+
+header p {
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: rgba(15, 23, 42, 0.35);                   
+  border-radius: 16px;
+  padding: 16px 18px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(18px);                          
+  -webkit-backdrop-filter: blur(18px);                  
+}
+
+.card h2 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.kpi {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 8px 0 12px;
+}
+
+canvas {
+  width: 100%;
+  max-height: 260px;
+}

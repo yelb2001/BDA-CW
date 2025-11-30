@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Weather Analysis Dashboard</h1>
+    <p>Static summary based on Hadoop/Hive results.</p>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>Most Precipitous Season by District</h2>
+      <canvas id="chartMostPrecip"></canvas>
+    </section>
+
+    <section class="card">
+      <h2>Top 5 Districts by Precipitation</h2>
+      <canvas id="chartTopDistricts"></canvas>
+    </section>
+
+    <section class="card">
+      <h2>% Months with Temp &gt; 30°C</h2>
+      <canvas id="chartHotMonths"></canvas>
+    </section>
+
+    <section class="card">
+      <h2>Extreme Weather Days</h2>
+      <div id="extremeDaysValue" class="kpi"></div>
+      <canvas id="chartExtremeDays"></canvas>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
