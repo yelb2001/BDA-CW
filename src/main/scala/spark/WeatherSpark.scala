@@ -8,7 +8,7 @@ object WeatherSpark{
 
         val spark = SparkSession.builder()
             .appName("WeatherSpark")
-            .master("local[*]")
+            .master("spark://spark-master:7077")
             .getOrCreate()
 
 

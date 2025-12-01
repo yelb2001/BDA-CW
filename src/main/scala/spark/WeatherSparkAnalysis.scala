@@ -7,7 +7,7 @@ object WeatherSparkAnalysis {
 
     val spark = SparkSession.builder()
       .appName("WeatherAnalysis")
-      .master("local[*]")
+      .master("spark://spark-master:7077")
       .getOrCreate()
 
     // taking the parquet data 
