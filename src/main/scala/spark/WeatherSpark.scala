@@ -18,7 +18,8 @@ object WeatherSpark{
         val weatherRaw = spark.read
             .option("header", "true")
             .option("inferSchema", "true")
-            .csv("hdfs://namenode:9000/data/weather/weatherData.csv")
+            .csv("hdfs://namenode:9000/user/iitgcpuser/spark/data/weatherSpark/weatherData.csv")
+
 
 
         val weatherDateCheck = weatherRaw
@@ -43,7 +44,8 @@ object WeatherSpark{
         //writing to parquet file
         weatherCropped.write
             .mode(SaveMode.Overwrite)
-            .parquet("hdfs://namenode:9000/data/weather_parquet")
+            .parquet("hdfs://namenode:9000/user/iitgcpuser/spark/data/weatherSpark/weather_parquet")
+
 
 
         spark.stop()
