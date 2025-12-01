@@ -21,13 +21,26 @@ object WeatherSpark{
             .csv("hdfs://namenode:9000/data/weather/weatherData.csv")
 
 
+        val weatherDateCheck = weatherRaw
+         .withColumn("date_us", to_date($"date", "MM/dd/yyyy")) // month/day/year
+         .withColumn("date_eu", to_date($"date", "dd/MM/yyyy")) // day/month/year
+         .withColumn(
+            "w_date",
+                when($"date_us".isNotNull && $"date_eu".isNull, $"date_us")      // only US works
+                .when($"date_us".isNull && $"date_eu".isNotNull, $"date_eu")  // only EU works
+                .when($"date_us".isNotNull && $"date_eu".isNotNull, $"date_eu")
+                .otherwise(lit(null).cast("date"))
+        )
+        .drop("date_us", "date_eu")
+
+
         //taking only the columns needed
         val weatherCropped = weatherRaw.select(
-            col("date").cast("date").as("w_date"), 
-            col("shortwave_radiation_sum_MJ_m2").as("shortwave_mj")                                      
+            $"w_date",
+            $"shortwave_radiation_sum_MJ_m2".as("shortwave_mj")                                    
         )
 
-
+        //writing to parquet file
         weatherCropped.write
             .mode(SaveMode.Overwrite)
             .parquet("hdfs://namenode:9000/data/weather_parquet")
