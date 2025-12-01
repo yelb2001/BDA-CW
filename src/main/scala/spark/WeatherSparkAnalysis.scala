@@ -11,7 +11,7 @@ object WeatherSparkAnalysis {
       .getOrCreate()
 
     // taking the parquet data 
-    val weatherParquet = spark.read.parquet("hdfs://namenode:9000/data/weather_parquet")
+    val weatherParquet = spark.read.parquet("hdfs://namenode:9000/user/iitgcpuser/spark/data/weatherSpark/weather_parquet")
     weatherParquet.createOrReplaceTempView("weather_parquet")
 
     // question 1
