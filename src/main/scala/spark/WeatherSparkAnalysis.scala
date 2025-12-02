@@ -1,5 +1,3 @@
-package spark
-
 import org.apache.spark.sql.SparkSession
 
 object WeatherSparkAnalysis {
