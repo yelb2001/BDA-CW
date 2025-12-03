@@ -413,9 +413,9 @@
       "status": "FINISHED"
     },
     {
-      "text": "%spark\n",
+      "text": "%spark\n// test drive 101 optional\n// test 102",
       "user": "anonymous",
-      "dateUpdated": "2025-12-03 13:25:36.612",
+      "dateUpdated": "2025-12-03 16:12:37.573",
       "progress": 0,
       "config": {
         "colWidth": 12.0,
@@ -460,6 +460,6 @@
     "isZeppelinNotebookCronEnable": false
   },
   "info": {
-    "isRunning": true
+    "isRunning": false
   }
 }
