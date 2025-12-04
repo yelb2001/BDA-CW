@@ -16,6 +16,7 @@ public class MaxPrecipMonthYear {
 
     // Mapper: read each line from WeatherAnalysis job output
     // Example input line: Gampaha,2019,02\t30.0,25.0
+    //check test
     public static class MaxMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
         private Text outKey = new Text();
