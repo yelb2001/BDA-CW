@@ -5,6 +5,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -129,7 +130,7 @@ public class MaxPrecipitationAnalysis {
     }
 
     /// ----------------- Reducer -----------------
-    public static class MaxPrecipReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+    public static class MaxPrecipReducer extends Reducer<Text, DoubleWritable, Text, NullWritable> {
 
         private double globalMaxPrecip = Double.NEGATIVE_INFINITY;
         private String maxYearMonth = "";
@@ -167,10 +168,10 @@ public class MaxPrecipitationAnalysis {
                     String output = monthName + " " + year + " had the highest total precipitation of "
                                   + String.format("%.1f", globalMaxPrecip) + " hours";
 
-                    context.write(new Text(output), new DoubleWritable(globalMaxPrecip));
+                    context.write(new Text(output), NullWritable.get());
                 } else {
                     // Fallback if parsing fails
-                    context.write(new Text(maxYearMonth), new DoubleWritable(globalMaxPrecip));
+                    context.write(new Text(maxYearMonth), NullWritable.get());
                 }
             }
         }
@@ -223,7 +224,7 @@ public class MaxPrecipitationAnalysis {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(DoubleWritable.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(DoubleWritable.class);
+        job.setOutputValueClass(NullWritable.class);
 
         // Set input and output paths
         FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
