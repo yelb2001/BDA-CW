@@ -88,7 +88,7 @@ public class WeatherAnalysis {
             String tempMean   = a[5].trim(); // temperature_2m_mean
             String precipH    = a[13].trim(); // precipitation_hours
 
-            // JOIN in mapper: lookup city
+            // JOIN in mapper- lookup city
             String city = locationMap.get(locationId);
             if (city == null || city.isEmpty()) {
                 // no matching location → skip (inner join)
@@ -149,13 +149,13 @@ public class WeatherAnalysis {
                 int month;
 
                 if (p1 > 12) {
-                    // 13–31 → must be DAY → treat as DD/MM/YYYY
+                    // 13–31 - must be DAY - treat as DD/MM/YYYY
                     month = p2;
                 } else if (p2 > 12) {
-                    // 13–31 → must be DAY → treat as MM/DD/YYYY
+                    // 13–31 - must be DAY - treat as MM/DD/YYYY
                     month = p1;
                 } else {
-                    // both <= 12 → ambiguous; choose a rule and stick to it
+                    // both <= 12 
                     // Here we assume DD/MM/YYYY (p1=day, p2=month)
                     month = p2;
                 }
@@ -164,7 +164,6 @@ public class WeatherAnalysis {
                     return null;
                 }
 
-                // we don't *use* day for grouping, only year & month
                 return new int[]{year, month};
 
             } catch (Exception e) {

@@ -1,0 +1,148 @@
+CREATE DATABASE IF NOT EXISTS weatherdb;
+USE weatherdb;
+
+--location external table
+CREATE EXTERNAL TABLE locationData_tab (
+  location_id            INT,
+  latitude               DOUBLE,
+  longitude              DOUBLE,
+  elevation              INT,
+  utc_offset_seconds     INT,
+  timezone               STRING,
+  timezone_abbreviation  STRING,
+  city_name              STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/user/iitgcpuser/hive/data/location'
+TBLPROPERTIES (
+  "skip.header.line.count"="1"
+);
+
+
+-- weather external table
+CREATE EXTERNAL TABLE weatherData_tab (
+  location_id                 INT,
+  w_date                      STRING,
+  weather_code                INT,
+  temperature_2m_max          DOUBLE,
+  temperature_2m_min          DOUBLE,
+  temperature_2m_mean         DOUBLE,
+  apparent_temperature_max    DOUBLE,
+  apparent_temperature_min    DOUBLE,
+  apparent_temperature_mean   DOUBLE,
+  daylight_duration           DOUBLE,
+  sunshine_duration           DOUBLE,
+  precipitation_sum           DOUBLE,
+  rain_sum                    DOUBLE,
+  precipitation_hours         INT,
+  wind_speed_10m_max          DOUBLE,
+  wind_gusts_10m_max          DOUBLE,
+  wind_direction_10m_dominant INT,
+  shortwave_radiation_sum     DOUBLE,
+  et0_fao_evapotranspiration  DOUBLE,
+  sunrise                     STRING,
+  sunset                      STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/user/iitgcpuser/hive/data/weather'
+TBLPROPERTIES (
+  "skip.header.line.count"="1"
+);
+
+
+-- weather table with data pre proccessed
+CREATE TABLE weather_clean_tab AS
+SELECT
+  location_id,
+  -- clean date as DATE
+  CASE
+    WHEN CAST(split(w_date, '/')[0] AS INT) > 12 THEN
+      to_date(
+        concat_ws('-',
+          split(w_date, '/')[2],                          -- year
+          lpad(split(w_date, '/')[1], 2, '0'),            -- month
+          lpad(split(w_date, '/')[0], 2, '0')             -- day
+        )
+      )
+    ELSE
+      to_date(
+        concat_ws('-',
+          split(w_date, '/')[2],                          -- year
+          lpad(split(w_date, '/')[0], 2, '0'),            -- month
+          lpad(split(w_date, '/')[1], 2, '0')             -- day
+        )
+      )
+  END AS w_date_clean,
+  weather_code,
+  temperature_2m_max,
+  temperature_2m_min,
+  temperature_2m_mean,
+  apparent_temperature_max,
+  apparent_temperature_min,
+  apparent_temperature_mean,
+  daylight_duration,
+  sunshine_duration,
+  precipitation_sum,
+  rain_sum,
+  precipitation_hours,
+  wind_speed_10m_max,
+  wind_gusts_10m_max,
+  wind_direction_10m_dominant,
+  shortwave_radiation_sum,
+  et0_fao_evapotranspiration,
+  sunrise,
+  sunset
+FROM
+  weatherData_tab;
+
+—-------------------
+
+SELECT
+  l.location_id,
+  l.city_name,
+  AVG(w.temperature_2m_max) AS avg_max_temp
+FROM
+  weather_clean_tab w
+JOIN
+  locationData_tab l
+ON
+  w.location_id = l.location_id
+GROUP BY
+  l.location_id,
+  l.city_name
+ORDER BY
+  avg_max_temp DESC
+LIMIT 10;
+—---------------------------
+
+SELECT
+  l.city_name,                         
+  year(w.w_date_clean) AS yr,
+  CASE
+    WHEN month(w.w_date_clean) IN (9,10,11,12,1,2,3) THEN 'Sep-Mar'
+    WHEN month(w.w_date_clean) BETWEEN 4 AND 8       THEN 'Apr-Aug'
+  END AS season,
+  AVG(w.et0_fao_evapotranspiration) AS avg_et0_mm
+FROM
+  weather_clean_tab w
+JOIN
+  locationData_tab l
+ON
+  w.location_id = l.location_id
+GROUP BY
+  l.city_name,
+  year(w.w_date_clean),
+  CASE
+    WHEN month(w.w_date_clean) IN (9,10,11,12,1,2,3) THEN 'Sep-Mar'
+    WHEN month(w.w_date_clean) BETWEEN 4 AND 8       THEN 'Apr-Aug'
+  END
+ORDER BY
+  l.city_name,
+  yr,
+  season;
+
+
