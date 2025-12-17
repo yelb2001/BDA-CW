@@ -4,9 +4,7 @@ Chart.defaults.color = '#cbd5e1';
 Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.2)';
 Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 
-// ============================================================
 // QUESTION 1: Most Precipitous Month per District
-// ============================================================
 
 // Month color mapping for visual patterns
 const monthColors = {
@@ -16,30 +14,30 @@ const monthColors = {
   'October': '#8b5cf6', 'November': '#a78bfa', 'December': '#c4b5fd'
 };
 
-// Data: Each district's wettest month (aggregated across all years)
+// Data: Each district's wettest month (aggregated across all years) - REAL DATA
 const q1Data = [
-  { district: 'Colombo', wettestMonth: 'October', avgPrecipitation: 350 },
-  { district: 'Gampaha', wettestMonth: 'November', avgPrecipitation: 320 },
-  { district: 'Kandy', wettestMonth: 'October', avgPrecipitation: 295 },
-  { district: 'Galle', wettestMonth: 'October', avgPrecipitation: 285 },
-  { district: 'Matara', wettestMonth: 'November', avgPrecipitation: 275 },
-  { district: 'Nuwara Eliya', wettestMonth: 'October', avgPrecipitation: 268 },
-  { district: 'Kalutara', wettestMonth: 'May', avgPrecipitation: 255 },
-  { district: 'Ratnapura', wettestMonth: 'May', avgPrecipitation: 245 },
-  { district: 'Kurunegala', wettestMonth: 'October', avgPrecipitation: 230 },
-  { district: 'Batticaloa', wettestMonth: 'November', avgPrecipitation: 220 },
-  { district: 'Trincomalee', wettestMonth: 'November', avgPrecipitation: 210 },
-  { district: 'Anuradhapura', wettestMonth: 'October', avgPrecipitation: 195 },
-  { district: 'Jaffna', wettestMonth: 'November', avgPrecipitation: 180 },
-  { district: 'Mannar', wettestMonth: 'October', avgPrecipitation: 165 },
-  { district: 'Vavuniya', wettestMonth: 'November', avgPrecipitation: 155 }
+  { district: 'Ratnapura', wettestMonth: 'October', avgPrecipitation: 16.2 },
+  { district: 'Kegalle', wettestMonth: 'October', avgPrecipitation: 13.2 },
+  { district: 'Nuwara Eliya', wettestMonth: 'October', avgPrecipitation: 13.2 },
+  { district: 'Matale', wettestMonth: 'October', avgPrecipitation: 13.1 },
+  { district: 'Gampaha', wettestMonth: 'October', avgPrecipitation: 12.6 },
+  { district: 'Kurunegala', wettestMonth: 'October', avgPrecipitation: 12.6 },
+  { district: 'Colombo', wettestMonth: 'November', avgPrecipitation: 12.5 },
+  { district: 'Bandarawela', wettestMonth: 'October', avgPrecipitation: 12.2 },
+  { district: 'Kandy', wettestMonth: 'October', avgPrecipitation: 12.2 },
+  { district: 'Kalutara', wettestMonth: 'October', avgPrecipitation: 12.0 },
+  { district: 'Galle', wettestMonth: 'November', avgPrecipitation: 11.6 },
+  { district: 'Badulla', wettestMonth: 'November', avgPrecipitation: 11.4 },
+  { district: 'Welimada', wettestMonth: 'October', avgPrecipitation: 11.4 },
+  { district: 'Batticaloa', wettestMonth: 'December', avgPrecipitation: 11.3 },
+  { district: 'Moneragala', wettestMonth: 'November', avgPrecipitation: 11.1 }
 ];
 
 // Create horizontal bar chart
 new Chart(document.getElementById('chartMostPrecip'), {
   type: 'bar',
   data: {
-    labels: q1Data.map(d => d.district),
+    labels: q1Data.map(d => `${d.district} (${d.wettestMonth})`),
     datasets: [{
       label: 'Average Precipitation (mm)',
       data: q1Data.map(d => d.avgPrecipitation),
@@ -58,13 +56,9 @@ new Chart(document.getElementById('chartMostPrecip'), {
       },
       tooltip: {
         callbacks: {
-          title: (items) => q1Data[items[0].dataIndex].district,
           label: (context) => {
             const district = q1Data[context.dataIndex];
-            return [
-              `Wettest Month: ${district.wettestMonth}`,
-              `Average: ${district.avgPrecipitation} mm`
-            ];
+            return `Average: ${district.avgPrecipitation} mm`;
           }
         }
       }
@@ -93,30 +87,17 @@ new Chart(document.getElementById('chartMostPrecip'), {
   }
 });
 
-// Generate dynamic insight for Q1
-const monthCounts = {};
-q1Data.forEach(d => {
-  monthCounts[d.wettestMonth] = (monthCounts[d.wettestMonth] || 0) + 1;
-});
-const topMonth = Object.keys(monthCounts).sort((a,b) => monthCounts[b] - monthCounts[a])[0];
-const insightText = `${monthCounts[topMonth]} out of ${q1Data.length} districts have their wettest month in ${topMonth}, coinciding with the Northeast Monsoon season.`;
-
-// Update insight if element exists
-const q1InsightElement = document.querySelector('.card:nth-child(1) .insight');
-if (q1InsightElement) {
-  q1InsightElement.innerHTML = `<strong>Key Insight:</strong> ${insightText}`;
-}
-
 // ============================================================
 // QUESTION 2: Top 5 Districts by Total Precipitation (2023)
 // ============================================================
 
+// REAL DATA from 2023
 const q2Data = [
-  { rank: 1, district: 'Colombo', total: 3240, province: 'Western' },
-  { rank: 2, district: 'Gampaha', total: 3050, province: 'Western' },
-  { rank: 3, district: 'Kandy', total: 2890, province: 'Central' },
-  { rank: 4, district: 'Galle', total: 2760, province: 'Southern' },
-  { rank: 5, district: 'Matara', total: 2580, province: 'Southern' }
+  { rank: 1, district: 'Ratnapura', total: 5358, province: 'Sabaragamuwa' },
+  { rank: 2, district: 'Gampaha', total: 3563, province: 'Western' },
+  { rank: 3, district: 'Kalutara', total: 3531, province: 'Western' },
+  { rank: 4, district: 'Galle', total: 3481, province: 'Southern' },
+  { rank: 5, district: 'Colombo', total: 3468, province: 'Western' }
 ];
 
 // Create Doughnut Chart
@@ -190,25 +171,26 @@ q2Data.forEach(item => {
 // QUESTION 3: Percentage of Months with Temp > 30°C (2023)
 // ============================================================
 
+// REAL DATA from 2023 - averaged across all districts
 const q3Data = {
   year: 2023,
   monthlyData: [
-    { month: 'Jan', avgTemp: 26.2, isHot: false },
-    { month: 'Feb', avgTemp: 27.8, isHot: false },
-    { month: 'Mar', avgTemp: 30.5, isHot: true },
-    { month: 'Apr', avgTemp: 31.8, isHot: true },
-    { month: 'May', avgTemp: 32.4, isHot: true },
-    { month: 'Jun', avgTemp: 31.2, isHot: true },
-    { month: 'Jul', avgTemp: 30.9, isHot: true },
-    { month: 'Aug', avgTemp: 29.8, isHot: false },
-    { month: 'Sep', avgTemp: 28.9, isHot: false },
-    { month: 'Oct', avgTemp: 27.6, isHot: false },
-    { month: 'Nov', avgTemp: 26.8, isHot: false },
-    { month: 'Dec', avgTemp: 25.9, isHot: false }
+    { month: 'Jan', avgTemp: 23.6, isHot: false },
+    { month: 'Feb', avgTemp: 24.2, isHot: false },
+    { month: 'Mar', avgTemp: 25.4, isHot: false },
+    { month: 'Apr', avgTemp: 26.4, isHot: false },
+    { month: 'May', avgTemp: 26.6, isHot: false },
+    { month: 'Jun', avgTemp: 27.1, isHot: false },
+    { month: 'Jul', avgTemp: 26.8, isHot: false },
+    { month: 'Aug', avgTemp: 27.3, isHot: false },
+    { month: 'Sep', avgTemp: 25.9, isHot: false },
+    { month: 'Oct', avgTemp: 25.0, isHot: false },
+    { month: 'Nov', avgTemp: 24.6, isHot: false },
+    { month: 'Dec', avgTemp: 24.7, isHot: false }
   ],
-  hotMonthsCount: 5,
+  hotMonthsCount: 0,
   totalMonths: 12,
-  percentage: 41.7
+  percentage: 0.0
 };
 
 // Create bar chart with conditional coloring
@@ -283,37 +265,38 @@ document.querySelector('.card:nth-child(3) .kpi-item:nth-child(2) .kpi-detail').
 // QUESTION 4: Extreme Weather Events (Dual Charts)
 // ============================================================
 
+// REAL DATA - Extreme weather events (precip > 15mm AND wind gusts > 40 km/h)
 const q4Data = {
-  total: 1247,
-  mostAffected: { district: 'Colombo', count: 183 },
+  total: 3529,
+  mostAffected: { district: 'Galle', count: 322 },
   yearlyTrend: [
-    { year: 2010, days: 58 },
-    { year: 2011, days: 67 },
-    { year: 2012, days: 72 },
-    { year: 2013, days: 78 },
-    { year: 2014, days: 85 },
-    { year: 2015, days: 79 },
-    { year: 2016, days: 94 },
-    { year: 2017, days: 88 },
-    { year: 2018, days: 96 },
-    { year: 2019, days: 102 },
-    { year: 2020, days: 89 },
-    { year: 2021, days: 108 },
-    { year: 2022, days: 115 },
-    { year: 2023, days: 121 },
-    { year: 2024, days: 125 }
+    { year: 2010, days: 256 },
+    { year: 2011, days: 297 },
+    { year: 2012, days: 177 },
+    { year: 2013, days: 230 },
+    { year: 2014, days: 179 },
+    { year: 2015, days: 99 },
+    { year: 2016, days: 133 },
+    { year: 2017, days: 347 },
+    { year: 2018, days: 242 },
+    { year: 2019, days: 246 },
+    { year: 2020, days: 317 },
+    { year: 2021, days: 347 },
+    { year: 2022, days: 284 },
+    { year: 2023, days: 243 },
+    { year: 2024, days: 132 }
   ],
   topDistricts: [
-    { district: 'Colombo', days: 183 },
-    { district: 'Gampaha', days: 165 },
-    { district: 'Kandy', days: 142 },
-    { district: 'Galle', days: 128 },
-    { district: 'Matara', days: 115 },
-    { district: 'Kalutara', days: 98 },
-    { district: 'Kurunegala', days: 87 },
-    { district: 'Ratnapura', days: 76 },
-    { district: 'Batticaloa', days: 65 },
-    { district: 'Trincomalee', days: 58 }
+    { district: 'Galle', days: 322 },
+    { district: 'Kalutara', days: 299 },
+    { district: 'Colombo', days: 295 },
+    { district: 'Gampaha', days: 269 },
+    { district: 'Ratnapura', days: 259 },
+    { district: 'Nuwara Eliya', days: 237 },
+    { district: 'Kegalle', days: 201 },
+    { district: 'Matara', days: 163 },
+    { district: 'Mullaitivu', days: 129 },
+    { district: 'Matale', days: 126 }
   ]
 };
 
@@ -427,19 +410,6 @@ new Chart(document.getElementById('chartExtremeDistricts'), {
     }
   }
 });
-
-// Generate dynamic insight for Q4
-const firstYear = q4Data.yearlyTrend[0];
-const lastYear = q4Data.yearlyTrend[q4Data.yearlyTrend.length - 1];
-const increase = lastYear.days - firstYear.days;
-const increasePercent = ((increase / firstYear.days) * 100).toFixed(1);
-
-const q4InsightText = `Extreme weather events have increased by ${increasePercent}% from ${firstYear.year} (${firstYear.days} days) to ${lastYear.year} (${lastYear.days} days). ${q4Data.mostAffected.district} is the most vulnerable district with ${q4Data.mostAffected.count} extreme weather days.`;
-
-const q4InsightElement = document.querySelector('.card:nth-child(4) .insight');
-if (q4InsightElement) {
-  q4InsightElement.innerHTML = `<strong>⚠️ Trend Alert:</strong> ${q4InsightText}`;
-}
 
 // ============================================================
 // ADDITIONAL UX ENHANCEMENTS
