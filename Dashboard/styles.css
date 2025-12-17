@@ -280,3 +280,114 @@ footer p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ========== Custom Grid Spans for Dashboard Layout ========== */
+
+/* Q1: Full width - needs space for all districts */
+.card-q1 {
+  grid-column: span 2;
+}
+
+/* Q2 & Q3: Half width each on desktop */
+.card-q2,
+.card-q3 {
+  grid-column: span 1;
+}
+
+/* Q4: Full width with internal two-column grid */
+.card-q4 {
+  grid-column: span 2;
+}
+
+/* ========== Question 1: Chart Container ========== */
+.chart-container {
+  height: 550px;
+  margin: 20px 0;
+}
+
+.chart-container canvas {
+  max-height: 550px !important;
+}
+
+/* ========== Question 4: Two-Column Layout ========== */
+.q4-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.q4-chart-item {
+  background: rgba(30, 41, 59, 0.3);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.q4-chart-item h3 {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.q4-chart-item canvas {
+  max-height: 300px !important;
+}
+
+/* ========== Enhanced Responsive Design ========== */
+@media (max-width: 968px) {
+  /* All cards take full width on tablet and below */
+  .card-q1,
+  .card-q2,
+  .card-q3,
+  .card-q4 {
+    grid-column: span 1;
+  }
+
+  /* Q4 charts stack vertically */
+  .q4-charts {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Reduce Q1 chart height on smaller screens */
+  .chart-container {
+    height: 450px;
+  }
+
+  .chart-container canvas {
+    max-height: 450px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Further reduce chart heights on mobile */
+  .chart-container {
+    height: 350px;
+  }
+
+  .chart-container canvas {
+    max-height: 350px !important;
+  }
+
+  .q4-chart-item canvas {
+    max-height: 250px !important;
+  }
+
+  /* Stack KPI items vertically on small screens */
+  .kpi-row {
+    grid-template-columns: 1fr;
+  }
+
+  .q4-chart-item {
+    padding: 16px;
+  }
+
+  .q4-chart-item h3 {
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+  }
+}
