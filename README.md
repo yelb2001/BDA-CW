@@ -5,7 +5,7 @@ The objective of the assignment is to implement a Hadoop MapReduce program that 
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 The project focuses on analyzing weather data using the Hadoop MapReduce programming model.  
 The tasks completed in the project include:
@@ -23,6 +23,12 @@ The tasks completed in the project include:
 
 ---
 
-## 🗂 Folder Structure
+## Tech stack
+
+- Java + Maven
+- Hadoop (HDFS + MapReduce)
+- Hive (SQL-on-Hadoop)
+- Spark / Zeppelin 
+
 
 
